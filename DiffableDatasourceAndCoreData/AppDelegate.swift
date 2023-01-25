@@ -11,17 +11,28 @@ import CoreData
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
+    let videoUrls: [String: String] = [
+        "Afternoon walk in Chamonix, France, in winter (part 1)": "https://youtu.be/ANBGkZwOX68",
+        "Afternoon walk in Chamonix, France, in winter (part 2)": "https://youtu.be/FP9_xIqeY04",
+        "Afternoon walk in Chamonix, France, in winter (part 3)": "https://youtu.be/0yHPJjrmY9M",
+        "Afternoon walk in Chamonix, France, in winter (part 4)": "https://youtu.be/i140FFzKwHM",
+        "Afternoon walk in Chamonix, France, in winter (part 5)": "https://youtu.be/-c37LBSJrA0",
+        "Afternoon walk in Chamonix, France, in winter (part 6)": "https://youtu.be/RlHwBtO65GI",
+        "Afternoon walk in Chamonix, France, in winter (part 7)": "https://youtu.be/ZSvNcpWSccE",
+        "Afternoon walk in Chamonix, France, in winter (part 8)": "https://youtu.be/_crNfAd86bc",
+        "Afternoon walk in Chamonix, France, in winter (part 9)": "https://youtu.be/DGyK0es9ZQg",
+        "Afternoon walk in Chamonix, France, in winter (part 10)": "https://youtu.be/ojIhjb8J7fU",
+        "Afternoon walk in Chamonix, France, in winter (part 11)": "https://youtu.be/swI3Mp_Ofqk",
+    ]
+    
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         let context = persistentContainer.viewContext
         
-        for _ in 0..<10 {
-            guard let entity = NSEntityDescription.entity(forEntityName: "Memory", in: context) else { continue }
-            let newMemory = NSManagedObject(entity: entity, insertInto: context)
-            newMemory.setValue(URL(string: ""), forKey: "photoURI")
-        }
+        let entity = NSEntityDescription.entity(forEntityName: "Memory", in: context)!
+        let newMemory = NSManagedObject(entity: entity, insertInto: context)
+        newMemory.setValue(URL(string: ""), forKey: "photoURI")
         
         do {
           try context.save()

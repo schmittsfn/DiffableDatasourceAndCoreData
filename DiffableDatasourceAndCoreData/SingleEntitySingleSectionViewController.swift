@@ -61,7 +61,7 @@ extension SingleEntitySingleSectionViewController {
     
     private func configureDataSource() {
         
-        let cellRegistration = UICollectionView.CellRegistration<UICollectionViewCell, NSManagedObjectID> { ell, _, id in
+        let cellRegistration = UICollectionView.CellRegistration<UICollectionViewCell, NSManagedObjectID> { cell, _, id in
             
         }
         
