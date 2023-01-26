@@ -13,6 +13,7 @@ final class SingleEntitySingleSectionViewController: UIViewController {
 
     private enum Section: Int, CaseIterable {
         case main
+        case secondary
     }
     
     private enum ListItemType: Hashable {
@@ -61,8 +62,22 @@ extension SingleEntitySingleSectionViewController {
     
     private func configureDataSource() {
         
-        let cellRegistration = UICollectionView.CellRegistration<UICollectionViewCell, NSManagedObjectID> { cell, _, id in
+        let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, NSManagedObjectID> { cell, _, id in
             
+            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { assertionFailure(); return; }
+            let managedContext = appDelegate.persistentContainer.viewContext
+            let request = Memory.fetchRequest()
+            request.predicate = NSPredicate(format: "SELF == %@", id)
+            request.fetchLimit = 1
+            do {
+                guard let result = try managedContext.fetch(request).first else { assertionFailure(); return; }
+                
+                var configuration = cell.defaultContentConfiguration()
+                configuration.text = result.title
+                cell.contentConfiguration = configuration
+            } catch let error as NSError {
+                print("Failed to fetch entity: \(error). \(error.userInfo)")
+            }
         }
         
         dataSource = DataSource(collectionView: collectionView) { (collectionView: UICollectionView, indexPath: IndexPath, itemID: ListItemID) -> UICollectionViewCell? in
@@ -75,17 +90,23 @@ extension SingleEntitySingleSectionViewController {
     }
     
     private func setInitialData() {
-        Memory.fetchRequest()
-        
-//        let frc = NSFetchedResultsController(fetchRequest: ,
-//                                             managedObjectContext: ,
-//                                             sectionNameKeyPath: ,
-//                                             cacheName: nil)
-//        do {
-//            try frc.performFetch()
-//        } catch let error {
-//            fatalError("Failed to fetch entities: \(error.localizedDescription)")
-//        }
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        let managedContext = appDelegate.persistentContainer.viewContext
+        let fetchRequest = Memory.fetchRequest()
+        fetchRequest.sortDescriptors = [
+            NSSortDescriptor(key: "type", ascending: true)
+        ]
+
+        let frc = NSFetchedResultsController(fetchRequest: fetchRequest,
+                                             managedObjectContext: managedContext,
+                                             sectionNameKeyPath: "type",
+                                             cacheName: nil)
+        frc.delegate = self
+        do {
+            try frc.performFetch()
+        } catch let error as NSError {
+            print("Failed to fetch entities: \(error). \(error.userInfo)")
+        }
     }
 }
 
@@ -96,5 +117,31 @@ extension SingleEntitySingleSectionViewController: UICollectionViewDelegate {
 extension SingleEntitySingleSectionViewController: NSFetchedResultsControllerDelegate {
     public func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
         
+        let databaseSnapshot = snapshot as NSDiffableDataSourceSnapshot<String, NSManagedObjectID>
+        
+        var newSnapshot = Snapshot()
+        for sectionIdentifier in databaseSnapshot.sectionIdentifiers {
+            let items = databaseSnapshot.itemIdentifiers(inSection: sectionIdentifier)
+            let section: Section
+            switch sectionIdentifier {
+            case "0":
+                section = .main
+                
+            case "1":
+                section = .secondary
+                
+            default:
+                assertionFailure()
+                return
+            }
+            newSnapshot.appendSections([section])
+            newSnapshot.appendItems(items.compactMap(convertToListItemID(using:)), toSection: section)
+        }
+        
+        dataSource.apply(newSnapshot, animatingDifferences: true, completion: nil)
+    }
+    
+    private func convertToListItemID(using id: NSManagedObjectID) -> ListItemID {
+        return ListItemType.memory(id: id)
     }
 }
