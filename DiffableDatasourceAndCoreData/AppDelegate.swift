@@ -10,36 +10,91 @@ import CoreData
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
-    let videoUrls: [String: String] = [
-        "Afternoon walk in Chamonix, France, in winter (part 1)": "https://youtu.be/ANBGkZwOX68",
-        "Afternoon walk in Chamonix, France, in winter (part 2)": "https://youtu.be/FP9_xIqeY04",
-        "Afternoon walk in Chamonix, France, in winter (part 3)": "https://youtu.be/0yHPJjrmY9M",
-        "Afternoon walk in Chamonix, France, in winter (part 4)": "https://youtu.be/i140FFzKwHM",
-        "Afternoon walk in Chamonix, France, in winter (part 5)": "https://youtu.be/-c37LBSJrA0",
-        "Afternoon walk in Chamonix, France, in winter (part 6)": "https://youtu.be/RlHwBtO65GI",
-        "Afternoon walk in Chamonix, France, in winter (part 7)": "https://youtu.be/ZSvNcpWSccE",
-        "Afternoon walk in Chamonix, France, in winter (part 8)": "https://youtu.be/_crNfAd86bc",
-        "Afternoon walk in Chamonix, France, in winter (part 9)": "https://youtu.be/DGyK0es9ZQg",
-        "Afternoon walk in Chamonix, France, in winter (part 10)": "https://youtu.be/ojIhjb8J7fU",
-        "Afternoon walk in Chamonix, France, in winter (part 11)": "https://youtu.be/swI3Mp_Ofqk",
+    
+    private let videoUrls: [[String: String]] = [
+        [
+            "title": "Afternoon walk in Chamonix, France, in winter (part 1)",
+            "type": "0",
+            "url": "https://youtu.be/ANBGkZwOX68"
+        ],
+        [
+            "title": "Afternoon walk in Chamonix, France, in winter (part 2)",
+            "type": "0",
+            "url": "https://youtu.be/FP9_xIqeY04"
+        ],
+        [
+            "title": "Afternoon walk in Chamonix, France, in winter (part 3)",
+            "type": "0",
+            "url": "https://youtu.be/0yHPJjrmY9M"
+        ],
+        [
+            "title": "Afternoon walk in Chamonix, France, in winter (part 4)",
+            "type": "0",
+            "url": "https://youtu.be/i140FFzKwHM"
+        ],
+        [
+            "title": "Afternoon walk in Chamonix, France, in winter (part 5)",
+            "type": "0",
+            "url": "https://youtu.be/-c37LBSJrA0"
+        ],
+        [
+            "title": "Afternoon walk in Chamonix, France, in winter (part 6)",
+            "type": "1",
+            "url": "https://youtu.be/RlHwBtO65GI"
+        ],
+        [
+            "title": "Afternoon walk in Chamonix, France, in winter (part 7)",
+            "type": "1",
+            "url": "https://youtu.be/ZSvNcpWSccE"
+        ],
+        [
+            "title": "Afternoon walk in Chamonix, France, in winter (part 8)",
+            "type": "1",
+            "url": "https://youtu.be/_crNfAd86bc"
+        ],
+        [
+            "title": "Afternoon walk in Chamonix, France, in winter (part 9)",
+            "type": "1",
+            "url": "https://youtu.be/DGyK0es9ZQg"
+        ],
+        [
+            "title": "Afternoon walk in Chamonix, France, in winter (part 10)",
+            "type": "1",
+            "url": "https://youtu.be/ojIhjb8J7fU"
+        ],
+        [
+            "title": "Afternoon walk in Chamonix, France, in winter (part 11)",
+            "type": "1",
+            "url": "https://youtu.be/swI3Mp_Ofqk"
+        ],
     ]
     
-
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    private let kFirstTimeLaunch = "firsttimelaunch"
+    
+    private func setInitialData() {
+        guard !UserDefaults.standard.bool(forKey: kFirstTimeLaunch) else { return }
         
         let context = persistentContainer.viewContext
         
-        let entity = NSEntityDescription.entity(forEntityName: "Memory", in: context)!
-        let newMemory = NSManagedObject(entity: entity, insertInto: context)
-        newMemory.setValue(URL(string: ""), forKey: "photoURI")
-        
-        do {
-          try context.save()
-         } catch {
-             print("Error saving: \(error.localizedDescription)")
+        for dict in videoUrls {
+            let entity = NSEntityDescription.entity(forEntityName: "Memory", in: context)!
+            let newMemory = NSManagedObject(entity: entity, insertInto: context)
+            newMemory.setValue(URL(string: dict["url"]!)!, forKey: "photoURI")
+            newMemory.setValue(dict["type"], forKey: "type")
+            newMemory.setValue(dict["title"], forKey: "title")
         }
         
+        do {
+            try context.save()
+            UserDefaults.standard.set(true, forKey: kFirstTimeLaunch)
+        } catch let error as NSError {
+            print("Could not save. \(error), \(error.userInfo)")
+        }
+    }
+
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        
+        setInitialData()
         return true
     }
 
