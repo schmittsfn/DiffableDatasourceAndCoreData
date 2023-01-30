@@ -28,6 +28,8 @@ final class SingleEntitySingleSectionViewController: UIViewController {
     private var dataSource: UICollectionViewDiffableDataSource<SectionItem, ListItemID>! = nil
     private weak var collectionView: UICollectionView! = nil
     
+    private var sectionTitles: [Section: String] = [:]
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -40,10 +42,7 @@ final class SingleEntitySingleSectionViewController: UIViewController {
 
 extension SingleEntitySingleSectionViewController {
     private func configureHierarchy() {
-        let configuration = UICollectionLayoutListConfiguration(appearance: .plain)
-        let layout = UICollectionViewCompositionalLayout.list(using: configuration)
-        
-        let collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
+        let collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createLayout())
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor = .systemBackground
         collectionView.allowsMultipleSelectionDuringEditing = true
@@ -58,6 +57,30 @@ extension SingleEntitySingleSectionViewController {
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
         ])
+    }
+    
+    private func createLayout() -> UICollectionViewLayout {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                             heightDimension: .fractionalHeight(1.0))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                              heightDimension: .absolute(44))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+
+        let section = NSCollectionLayoutSection(group: group)
+        section.interGroupSpacing = 5
+        section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10)
+
+        let headerFooterSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                     heightDimension: .estimated(44))
+        let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(
+            layoutSize: headerFooterSize,
+            elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
+        section.boundarySupplementaryItems = [sectionHeader]
+
+        let layout = UICollectionViewCompositionalLayout(section: section)
+        return layout
     }
     
     private func configureDataSource() {
@@ -80,6 +103,12 @@ extension SingleEntitySingleSectionViewController {
             }
         }
         
+        let headerRegistration = UICollectionView.SupplementaryRegistration<TitleSupplementaryView>(elementKind: UICollectionView.elementKindSectionHeader) { [weak self] (sectionHeaderView, string, indexPath) in
+            guard let section: Section = Section.allCases[safe: indexPath.section] else { assertionFailure(); return; }
+            guard let sectionTitle = self?.sectionTitles[section] else { assertionFailure(); return; }
+            sectionHeaderView.label.text = sectionTitle
+        }
+        
         dataSource = DataSource(collectionView: collectionView) { (collectionView: UICollectionView, indexPath: IndexPath, itemID: ListItemID) -> UICollectionViewCell? in
             switch itemID {
             case .memory(let id):
@@ -87,6 +116,9 @@ extension SingleEntitySingleSectionViewController {
             }
         }
         
+        dataSource.supplementaryViewProvider = { [weak self] (view, kind, index) in
+            return self?.collectionView.dequeueConfiguredReusableSupplementary(using: headerRegistration, for: index)
+        }
     }
     
     private func setInitialData() {
@@ -120,20 +152,10 @@ extension SingleEntitySingleSectionViewController: NSFetchedResultsControllerDel
         let databaseSnapshot = snapshot as NSDiffableDataSourceSnapshot<String, NSManagedObjectID>
         
         var newSnapshot = Snapshot()
-        for sectionIdentifier in databaseSnapshot.sectionIdentifiers {
+        for (i, sectionIdentifier) in databaseSnapshot.sectionIdentifiers.enumerated() {
             let items = databaseSnapshot.itemIdentifiers(inSection: sectionIdentifier)
-            let section: Section
-            switch sectionIdentifier {
-            case "0":
-                section = .main
-                
-            case "1":
-                section = .secondary
-                
-            default:
-                assertionFailure()
-                return
-            }
+            guard let section: Section = Section.allCases[safe: i] else { assertionFailure(); continue; }
+            sectionTitles[section] = sectionIdentifier
             newSnapshot.appendSections([section])
             newSnapshot.appendItems(items.compactMap(convertToListItemID(using:)), toSection: section)
         }
@@ -143,5 +165,36 @@ extension SingleEntitySingleSectionViewController: NSFetchedResultsControllerDel
     
     private func convertToListItemID(using id: NSManagedObjectID) -> ListItemID {
         return ListItemType.memory(id: id)
+    }
+}
+
+
+
+final class TitleSupplementaryView: UICollectionReusableView {
+    let label = UILabel()
+    static let reuseIdentifier = "title-supplementary-reuse-identifier"
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        configure()
+    }
+    required init?(coder: NSCoder) {
+        fatalError()
+    }
+}
+
+extension TitleSupplementaryView {
+    func configure() {
+        addSubview(label)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.adjustsFontForContentSizeCategory = true
+        let inset = CGFloat(10)
+        NSLayoutConstraint.activate([
+            label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: inset),
+            label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -inset),
+            label.topAnchor.constraint(equalTo: topAnchor, constant: inset),
+            label.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -inset)
+        ])
+        label.font = UIFont.preferredFont(forTextStyle: .title3)
     }
 }

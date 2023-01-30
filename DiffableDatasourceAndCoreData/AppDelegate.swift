@@ -14,57 +14,57 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private let videoUrls: [[String: String]] = [
         [
             "title": "Afternoon walk in Chamonix, France, in winter (part 1)",
-            "type": "0",
+            "type": "First half",
             "url": "https://youtu.be/ANBGkZwOX68"
         ],
         [
             "title": "Afternoon walk in Chamonix, France, in winter (part 2)",
-            "type": "0",
+            "type": "First half",
             "url": "https://youtu.be/FP9_xIqeY04"
         ],
         [
             "title": "Afternoon walk in Chamonix, France, in winter (part 3)",
-            "type": "0",
+            "type": "First half",
             "url": "https://youtu.be/0yHPJjrmY9M"
         ],
         [
             "title": "Afternoon walk in Chamonix, France, in winter (part 4)",
-            "type": "0",
+            "type": "First half",
             "url": "https://youtu.be/i140FFzKwHM"
         ],
         [
             "title": "Afternoon walk in Chamonix, France, in winter (part 5)",
-            "type": "0",
+            "type": "First half",
             "url": "https://youtu.be/-c37LBSJrA0"
         ],
         [
             "title": "Afternoon walk in Chamonix, France, in winter (part 6)",
-            "type": "1",
+            "type": "Second half",
             "url": "https://youtu.be/RlHwBtO65GI"
         ],
         [
             "title": "Afternoon walk in Chamonix, France, in winter (part 7)",
-            "type": "1",
+            "type": "Second half",
             "url": "https://youtu.be/ZSvNcpWSccE"
         ],
         [
             "title": "Afternoon walk in Chamonix, France, in winter (part 8)",
-            "type": "1",
+            "type": "Second half",
             "url": "https://youtu.be/_crNfAd86bc"
         ],
         [
             "title": "Afternoon walk in Chamonix, France, in winter (part 9)",
-            "type": "1",
+            "type": "Second half",
             "url": "https://youtu.be/DGyK0es9ZQg"
         ],
         [
             "title": "Afternoon walk in Chamonix, France, in winter (part 10)",
-            "type": "1",
+            "type": "Second half",
             "url": "https://youtu.be/ojIhjb8J7fU"
         ],
         [
             "title": "Afternoon walk in Chamonix, France, in winter (part 11)",
-            "type": "1",
+            "type": "Second half",
             "url": "https://youtu.be/swI3Mp_Ofqk"
         ],
     ]
