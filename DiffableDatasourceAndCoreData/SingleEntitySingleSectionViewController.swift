@@ -46,7 +46,6 @@ extension SingleEntitySingleSectionViewController {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor = .systemBackground
         collectionView.allowsMultipleSelectionDuringEditing = true
-        collectionView.delegate = self
         view.addSubview(collectionView)
         
         self.collectionView = collectionView
@@ -61,11 +60,11 @@ extension SingleEntitySingleSectionViewController {
     
     private func createLayout() -> UICollectionViewLayout {
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                             heightDimension: .fractionalHeight(1.0))
+                                             heightDimension: .estimated(44))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                              heightDimension: .absolute(44))
+                                              heightDimension: .estimated(44))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
 
         let section = NSCollectionLayoutSection(group: group)
@@ -97,6 +96,8 @@ extension SingleEntitySingleSectionViewController {
                 
                 var configuration = cell.defaultContentConfiguration()
                 configuration.text = result.title
+                configuration.textProperties.lineBreakMode = .byWordWrapping
+                configuration.textProperties.numberOfLines = 2
                 cell.contentConfiguration = configuration
             } catch let error as NSError {
                 print("Failed to fetch entity: \(error). \(error.userInfo)")
@@ -142,10 +143,6 @@ extension SingleEntitySingleSectionViewController {
     }
 }
 
-extension SingleEntitySingleSectionViewController: UICollectionViewDelegate {
-    
-}
-
 extension SingleEntitySingleSectionViewController: NSFetchedResultsControllerDelegate {
     public func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
         
@@ -168,33 +165,3 @@ extension SingleEntitySingleSectionViewController: NSFetchedResultsControllerDel
     }
 }
 
-
-
-final class TitleSupplementaryView: UICollectionReusableView {
-    let label = UILabel()
-    static let reuseIdentifier = "title-supplementary-reuse-identifier"
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        configure()
-    }
-    required init?(coder: NSCoder) {
-        fatalError()
-    }
-}
-
-extension TitleSupplementaryView {
-    func configure() {
-        addSubview(label)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.adjustsFontForContentSizeCategory = true
-        let inset = CGFloat(10)
-        NSLayoutConstraint.activate([
-            label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: inset),
-            label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -inset),
-            label.topAnchor.constraint(equalTo: topAnchor, constant: inset),
-            label.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -inset)
-        ])
-        label.font = UIFont.preferredFont(forTextStyle: .title3)
-    }
-}
