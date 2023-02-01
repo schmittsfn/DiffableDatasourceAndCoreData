@@ -29,6 +29,7 @@ final class SingleEntitySingleSectionViewController: UIViewController {
     private weak var collectionView: UICollectionView! = nil
     
     private var sectionTitles: [Section: String] = [:]
+    private var frc: NSFetchedResultsController<Memory>!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,7 +38,6 @@ final class SingleEntitySingleSectionViewController: UIViewController {
         configureDataSource()
         setInitialData()
     }
-
 }
 
 extension SingleEntitySingleSectionViewController {
@@ -45,6 +45,7 @@ extension SingleEntitySingleSectionViewController {
         let collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createLayout())
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor = .systemBackground
+        collectionView.delegate = self
         collectionView.allowsMultipleSelectionDuringEditing = true
         view.addSubview(collectionView)
         
@@ -130,11 +131,12 @@ extension SingleEntitySingleSectionViewController {
             NSSortDescriptor(key: "type", ascending: true)
         ]
 
-        let frc = NSFetchedResultsController(fetchRequest: fetchRequest,
-                                             managedObjectContext: managedContext,
-                                             sectionNameKeyPath: "type",
-                                             cacheName: nil)
+        frc = NSFetchedResultsController(fetchRequest: fetchRequest,
+                                         managedObjectContext: managedContext,
+                                         sectionNameKeyPath: "type",
+                                         cacheName: nil)
         frc.delegate = self
+        
         do {
             try frc.performFetch()
         } catch let error as NSError {
@@ -165,3 +167,13 @@ extension SingleEntitySingleSectionViewController: NSFetchedResultsControllerDel
     }
 }
 
+extension SingleEntitySingleSectionViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let memory = frc.object(at: indexPath)
+        
+        let webVc = WebViewController()
+        guard let url = memory.photoURI else { assertionFailure(); return; }
+        webVc.urlToLoad = url
+        navigationController?.pushViewController(webVc, animated: true)
+    }
+}

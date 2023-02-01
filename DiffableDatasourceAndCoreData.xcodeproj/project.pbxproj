@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F87AD46A298AD1AF0024FF58 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F87AD469298AD1AF0024FF58 /* WebViewController.swift */; };
 		F89216EC297F040B00D980A1 /* SingleEntityMultipleSectionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F89216EB297F040B00D980A1 /* SingleEntityMultipleSectionsViewController.swift */; };
 		F89216EE297F045E00D980A1 /* MultipleEntitiesMultipleSectionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F89216ED297F045E00D980A1 /* MultipleEntitiesMultipleSectionsViewController.swift */; };
 		F8B7D119297F010C00F9076A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B7D118297F010C00F9076A /* AppDelegate.swift */; };
@@ -21,6 +22,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		F87AD469298AD1AF0024FF58 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		F89216EB297F040B00D980A1 /* SingleEntityMultipleSectionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleEntityMultipleSectionsViewController.swift; sourceTree = "<group>"; };
 		F89216ED297F045E00D980A1 /* MultipleEntitiesMultipleSectionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleEntitiesMultipleSectionsViewController.swift; sourceTree = "<group>"; };
 		F8B7D115297F010C00F9076A /* DiffableDatasourceAndCoreData.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DiffableDatasourceAndCoreData.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -73,11 +75,12 @@
 				F8B7D11A297F010C00F9076A /* SceneDelegate.swift */,
 				F89216EB297F040B00D980A1 /* SingleEntityMultipleSectionsViewController.swift */,
 				F8B7D11C297F010C00F9076A /* SingleEntitySingleSectionViewController.swift */,
+				F8EC44932988713800B9C342 /* TitleSupplementaryView.swift */,
+				F87AD469298AD1AF0024FF58 /* WebViewController.swift */,
 				F8B7D124297F010C00F9076A /* Assets.xcassets */,
 				F8B7D121297F010C00F9076A /* DiffableDatasourceAndCoreData.xcdatamodeld */,
 				F8B7D126297F010C00F9076A /* LaunchScreen.storyboard */,
 				F8B7D11E297F010C00F9076A /* Main.storyboard */,
-				F8EC44932988713800B9C342 /* TitleSupplementaryView.swift */,
 			);
 			path = DiffableDatasourceAndCoreData;
 			sourceTree = "<group>";
@@ -154,6 +157,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F8B7D123297F010C00F9076A /* DiffableDatasourceAndCoreData.xcdatamodeld in Sources */,
+				F87AD46A298AD1AF0024FF58 /* WebViewController.swift in Sources */,
 				F8B7D11D297F010C00F9076A /* SingleEntitySingleSectionViewController.swift in Sources */,
 				F8EC44922988702C00B9C342 /* Collection+Extensions.swift in Sources */,
 				F8B7D119297F010C00F9076A /* AppDelegate.swift in Sources */,
