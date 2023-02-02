@@ -9,7 +9,7 @@ import CoreData
 import UIKit
 
 
-final class SingleEntitySingleSectionViewController: UIViewController {
+final class SingleEntitySingleSectionViewController: ListCollectionViewController {
 
     private enum Section: Int, CaseIterable {
         case main
@@ -26,7 +26,6 @@ final class SingleEntitySingleSectionViewController: UIViewController {
     private typealias Snapshot = NSDiffableDataSourceSnapshot<SectionItem, ListItemID>
     
     private var dataSource: UICollectionViewDiffableDataSource<SectionItem, ListItemID>! = nil
-    private weak var collectionView: UICollectionView! = nil
     
     private var sectionTitles: [Section: String] = [:]
     private var frc: NSFetchedResultsController<Memory>!
@@ -34,55 +33,13 @@ final class SingleEntitySingleSectionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        configureHierarchy()
         configureDataSource()
         setInitialData()
+        self.collectionView.delegate = self
     }
 }
 
 extension SingleEntitySingleSectionViewController {
-    private func configureHierarchy() {
-        let collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createLayout())
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.backgroundColor = .systemBackground
-        collectionView.delegate = self
-        collectionView.allowsMultipleSelectionDuringEditing = true
-        view.addSubview(collectionView)
-        
-        self.collectionView = collectionView
-        
-        NSLayoutConstraint.activate([
-            collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-        ])
-    }
-    
-    private func createLayout() -> UICollectionViewLayout {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                             heightDimension: .estimated(44))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                              heightDimension: .estimated(44))
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-
-        let section = NSCollectionLayoutSection(group: group)
-        section.interGroupSpacing = 5
-        section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10)
-
-        let headerFooterSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                     heightDimension: .estimated(44))
-        let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(
-            layoutSize: headerFooterSize,
-            elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
-        section.boundarySupplementaryItems = [sectionHeader]
-
-        let layout = UICollectionViewCompositionalLayout(section: section)
-        return layout
-    }
-    
     private func configureDataSource() {
         
         let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, NSManagedObjectID> { cell, _, id in

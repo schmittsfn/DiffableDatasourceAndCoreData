@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		F87AD46A298AD1AF0024FF58 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F87AD469298AD1AF0024FF58 /* WebViewController.swift */; };
+		F87AD484298C30000024FF58 /* ListCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F87AD483298C30000024FF58 /* ListCollectionViewController.swift */; };
 		F89216EC297F040B00D980A1 /* SingleEntityMultipleSectionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F89216EB297F040B00D980A1 /* SingleEntityMultipleSectionsViewController.swift */; };
 		F89216EE297F045E00D980A1 /* MultipleEntitiesMultipleSectionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F89216ED297F045E00D980A1 /* MultipleEntitiesMultipleSectionsViewController.swift */; };
 		F8B7D119297F010C00F9076A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B7D118297F010C00F9076A /* AppDelegate.swift */; };
@@ -23,6 +24,7 @@
 
 /* Begin PBXFileReference section */
 		F87AD469298AD1AF0024FF58 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
+		F87AD483298C30000024FF58 /* ListCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListCollectionViewController.swift; sourceTree = "<group>"; };
 		F89216EB297F040B00D980A1 /* SingleEntityMultipleSectionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleEntityMultipleSectionsViewController.swift; sourceTree = "<group>"; };
 		F89216ED297F045E00D980A1 /* MultipleEntitiesMultipleSectionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleEntitiesMultipleSectionsViewController.swift; sourceTree = "<group>"; };
 		F8B7D115297F010C00F9076A /* DiffableDatasourceAndCoreData.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DiffableDatasourceAndCoreData.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -71,6 +73,7 @@
 				F8B7D129297F010C00F9076A /* Info.plist */,
 				F8B7D118297F010C00F9076A /* AppDelegate.swift */,
 				F8EC44912988702C00B9C342 /* Collection+Extensions.swift */,
+				F87AD483298C30000024FF58 /* ListCollectionViewController.swift */,
 				F89216ED297F045E00D980A1 /* MultipleEntitiesMultipleSectionsViewController.swift */,
 				F8B7D11A297F010C00F9076A /* SceneDelegate.swift */,
 				F89216EB297F040B00D980A1 /* SingleEntityMultipleSectionsViewController.swift */,
@@ -158,6 +161,7 @@
 			files = (
 				F8B7D123297F010C00F9076A /* DiffableDatasourceAndCoreData.xcdatamodeld in Sources */,
 				F87AD46A298AD1AF0024FF58 /* WebViewController.swift in Sources */,
+				F87AD484298C30000024FF58 /* ListCollectionViewController.swift in Sources */,
 				F8B7D11D297F010C00F9076A /* SingleEntitySingleSectionViewController.swift in Sources */,
 				F8EC44922988702C00B9C342 /* Collection+Extensions.swift in Sources */,
 				F8B7D119297F010C00F9076A /* AppDelegate.swift in Sources */,
